@@ -1,6 +1,5 @@
-if (false) {
 window.bl = window.bl || {}
-//window.top.bl = window.bl
+window.top.bl = window.bl
 
 window.bl.expressionService = (function() {
   return {
@@ -32,6 +31,7 @@ window.bl.expressionService = (function() {
       'notin': notIn
     })[op]
 
+    if (!fn) throw new Error('operation not supported: ' + op)
     return fn.apply(null, args)
   }
 
@@ -45,8 +45,19 @@ window.bl.expressionService = (function() {
   }
 
   function resolveCSymbol(csymbol, symbols) {
-    if (!/^local:\/\//.test(csymbol)) throw new Error('invalid protocol for retrieving csymbol definition')
-    console.log(csymbol.match(/\/([^\/]+)/g))
+    var definitionURL = $(csymbol).attr('definitionURL')
+    if (typeof definitionURL != 'string') throw new Error('invalid csymbol - definitionURL attribute required')
+    if (!/^local:\/\//.test(definitionURL)) throw new Error('invalid protocol for retrieving csymbol definition')
+
+    var parts = definitionURL
+      .match(/\/[^\/]+/g)
+      .map(function(s) { return s.slice(1) })
+
+    var obj = symbols
+    var i = 0
+    while (i < parts.length && obj) {
+      obj = obj[parts[i++]]
+      console.log(obj)
+    }
   }
 }())
-}
