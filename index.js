@@ -36,7 +36,7 @@ window.bl.expressionService = (function() {
   }
 
   function isIn(member, set) {
-    console.log('isIn arguments:', arguments)
+    console.log('isIn', member, set)
     return true
   }
 
@@ -59,5 +59,11 @@ window.bl.expressionService = (function() {
       obj = obj[parts[i++]]
       console.log(obj)
     }
+
+    if (!obj) throw new Error('invalid csymbol definitionURL')
+
+    return typeof obj.mathml == 'string'
+      ? obj.mathml
+      : obj
   }
 }())
