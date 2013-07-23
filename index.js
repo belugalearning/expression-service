@@ -22,6 +22,7 @@ window.bl.expressionService = (function() {
       case 'cn':
         return Number($(node).text())
       case 'string':
+      case 'key':
         return $(node).text()
       case 'boolean':
         return $(node).text() == 'true'
