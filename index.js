@@ -6,7 +6,7 @@ window.bl.expressionService = (function() {
     evaluateExpression: function(o) {
       var expression = $.parseXML(o.expression).childNodes[0]
       //var expression = $(expression).children('apply')[0]
-      console.log('EXPR:', expression)
+      console.log('\n\nEXPR:', expression)
       return evaluate(expression, o.symbols)
     }
   }
