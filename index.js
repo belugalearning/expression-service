@@ -7,6 +7,7 @@ window.bl.expressionService = (function() {
       var expression = $.parseXML(o.expression).childNodes[0]
       //var expression = $(expression).children('apply')[0]
       console.log('\n\nEXPR:', expression)
+      console.log('\n\nO.SYMBOLS:', o.symbols)
       return evaluate(expression, o.symbols)
     }
   }
@@ -99,6 +100,20 @@ window.bl.expressionService = (function() {
     return result
   }
 
+  function neq(operands, symbols) {
+    if (
+        operands
+        .filter(function(arg) { return typeof arg == 'object' })
+        .length
+    ) {
+      throw new Error('as yet "neq" function only handles primitives')
+    }
+
+    if (operands.length != 2) throw new Error('neq is a binary operator')
+    var result = (operands[0] !== operands[1])
+    return result
+  }
+
   function and(operands, symbols) {
     var result = true
     var i = 0
@@ -106,6 +121,22 @@ window.bl.expressionService = (function() {
       result = evaluate(operands[i++], symbols) === true
     }
     return result
+  }
+
+  function or(operands, symbols){
+    var result = false
+    var i = 0
+    while (!result && i < operands.length) {
+      result = evaluate(operands[i++], symbols) === true
+    }
+  }
+
+  function sum(operands, symbols) {
+    var sum = 0
+    for (i = 0; i < operands.length; i++) {
+      sum = sum + operands[i];
+    }
+    return sum
   }
 
   function isIn(operands, symbols) {
@@ -123,7 +154,7 @@ window.bl.expressionService = (function() {
       var bvar = firstChild
       var condition = $(collection).children()[1]
       if (!bvar || !condition || bvar.nodeName.toLowerCase() != 'bvar' || condition.nodeName.toLowerCase() != 'condition') {
-        throw new Error('collection must be definied either by members of bvar+condition')
+        throw new Error('collection must be defined either by members of bvar+condition')
       }
 
       var ci = $(bvar).children()[0]
