@@ -1,5 +1,5 @@
 window.bl = window.bl || {}
-window.top.bl = window.bl
+window.parent.bl = window.bl
 
 window.bl.expressionService = (function() {
   return {
